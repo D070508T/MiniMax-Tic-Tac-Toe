@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -19,7 +18,11 @@ public class Main {
             }
             displayBoard(board);
         }
-        System.out.println(getWinner(board) + " WINS!");
+        if (getWinner(board) != '_') {
+            System.out.println(getWinner(board) + " WINS!");
+        } else {
+            System.out.println("TIE");
+        }
     }
 
     public static boolean gameOver(char[][] board) {
@@ -90,8 +93,6 @@ public class Main {
                 bestScore = score;
                 bestMove = move;
             }
-
-            System.out.println(Arrays.toString(move) + "   " + score);
         }
 
         return bestMove;
