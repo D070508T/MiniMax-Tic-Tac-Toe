@@ -3,30 +3,47 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        char[][] board = {{'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'}};
+        Scanner scanner = new Scanner(System.in);
 
-        displayBoard(board);
-        String input;
-        while (!gameOver(board)) {
-            do {
-                input = input();
-            } while (getNumberInput(board, input) == 0);
-            makeMove(1, board, getNumberInput(board, input));
-            if (!gameOver(board)) {
-                int[] AImove = getBestMove(board);
-                board[AImove[0]][AImove[1]] = 'X';
-            }
+        String playAgain;
+
+        System.out.println("""
+                 ---------- <<< WELCOME TO MINIMAX TIC-TAC-TOE >>> ----------
+                
+                You are 'O'
+                Minimax is 'X'
+                You start!
+                """);
+        do {
+            char[][] board = {{'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'}};
+
             displayBoard(board);
-        }
-        if (getWinner(board) != '_') {
-            System.out.println(getWinner(board) + " WINS!");
-        } else {
-            System.out.println("TIE");
-        }
+            String input;
+            while (notGameOver(board)) {
+                do {
+                    System.out.print("Choose a spot to place: ");
+                    input = scanner.nextLine();
+                } while (getNumberInput(board, input) == 0);
+                makeMove(1, board, getNumberInput(board, input));
+                if (notGameOver(board)) {
+                    int[] AImove = getBestMove(board);
+                    board[AImove[0]][AImove[1]] = 'X';
+                }
+                displayBoard(board);
+            }
+            if (getWinner(board) != '_') {
+                System.out.println(getWinner(board) + " WINS!");
+            } else {
+                System.out.println("TIE");
+            }
+
+            System.out.print("Would you like to play again? (y/n): ");
+            playAgain = scanner.nextLine();
+        } while (playAgain.equalsIgnoreCase("Y"));
     }
 
-    public static boolean gameOver(char[][] board) {
-        return isTie(board) || getWinner(board) != '_';
+    public static boolean notGameOver(char[][] board) {
+        return !isTie(board) && getWinner(board) == '_';
     }
 
     public static void resetMove(char[][] board, int[] move) {
@@ -133,12 +150,6 @@ public class Main {
         }
 
         return nums;
-    }
-
-    public static String input() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Choose a spot to place: ");
-        return scanner.nextLine();
     }
 
     public static int getNumberInput(char[][] board, String input) {
