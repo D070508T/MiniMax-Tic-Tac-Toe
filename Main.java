@@ -15,6 +15,7 @@ public class Main {
                 You start!
                 """);
         do {
+            totalCalculations = 0;
             char[][] board = {{'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'}};
 
             displayBoard(board);
@@ -26,17 +27,20 @@ public class Main {
                 } while (getNumberInput(board, input) == 0);
                 makeMove(1, board, getNumberInput(board, input));
                 if (notGameOver(board)) {
-                    int[] AImove = getBestMove(board);
-                    board[AImove[0]][AImove[1]] = 'X';
+                    int[] ai = getBestMove(board);
+                    board[ai[0]][ai[1]] = 'X';
                 }
                 displayBoard(board);
             }
-            if (getWinner(board) != '_') {
-                System.out.println(getWinner(board) + " WINS!");
+            if (getWinner(board) == 'X') {
+                System.out.println("YOU LOSE! MINIMAX BEAT YOU");
+            } else if (getWinner(board) == 'O') {
+                System.out.println("YOU WIN!");
             } else {
                 System.out.println("TIE");
             }
 
+            System.out.println("Total calculations made: " + totalCalculations);
             System.out.print("Would you like to play again? (y/n): ");
             playAgain = scanner.nextLine();
         } while (playAgain.equalsIgnoreCase("Y"));
@@ -59,7 +63,11 @@ public class Main {
         board[move[0]][move[1]] = Character.forDigit(digit, 10);
     }
 
+    public static int miniMaxCalls;
+    public static int totalCalculations;
     public static int minimax(char[][] board, boolean isMaximizing) {
+        miniMaxCalls++;
+        totalCalculations++;
         if (getWinner(board) == 'X') {
             return 1;
         } else if (getWinner(board) == 'O') {
@@ -97,6 +105,7 @@ public class Main {
     }
 
     public static int[] getBestMove(char[][] board) {
+        miniMaxCalls = 0;
         int bestScore = Integer.MIN_VALUE;
         int[] bestMove = null;
 
@@ -112,6 +121,7 @@ public class Main {
             }
         }
 
+        System.out.println("Calculations made: " + miniMaxCalls);
         return bestMove;
     }
 
@@ -138,18 +148,18 @@ public class Main {
     }
 
     public static int[] convertToIndexes(int num) {
-        int[] nums;
+        int[] index;
         if (num <= 3) {
-            nums = new int[]{0, num - 1};
+            index = new int[]{0, num - 1};
         } else {
             if (num <= 6) {
-                nums = new int[]{1, num - 4};
+                index = new int[]{1, num - 4};
             } else {
-                nums = new int[]{2, num - 7};
+                index = new int[]{2, num - 7};
             }
         }
 
-        return nums;
+        return index;
     }
 
     public static int getNumberInput(char[][] board, String input) {
